@@ -1,0 +1,48 @@
+a,
+a:visited,
+a:active {
+  color: inherit;
+  text-decoration: none;
+}
+
+hr.separator {
+  border-color: #414141;
+  margin: 15px 0;
+}
+
+.App {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+header {
+  padding: 0 20px 0 200px;
+}
+
+.titleRow {
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.body {
+  flex: 1;
+  display: flex;
+}
+
+.menubar {
+  width: 180px;
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  position: relative;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  overflow-y: scroll;
+  background-color: #2e2e2e;
+  padding: 20px;
+}

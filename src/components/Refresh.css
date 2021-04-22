@@ -1,0 +1,9 @@
+.refresh-button {
+  font-size: 1.7rem;
+  color: #a3a3a3;
+}
+
+.refresh-button:hover {
+  color: white;
+  cursor: pointer;
+}

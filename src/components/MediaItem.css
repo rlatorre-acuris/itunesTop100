@@ -1,0 +1,43 @@
+.media-item {
+  width: 150px;
+  padding: 8px;
+  border-radius: 4px;
+}
+
+.media-item-cover {
+  width: 100%;
+  background-color: black;
+}
+
+.media-item-image {
+  width: 100%;
+  height: auto;
+}
+
+.media-item-cover:hover .media-item-image {
+  opacity: 0.5;
+}
+
+.media-item-name {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-top: 8px;
+}
+
+.media-item-artist,
+.media-item-album {
+  font-size: 1rem;
+  font-weight: normal;
+  color: rgb(151, 151, 151);
+  margin-top: 8px;
+}
+
+.media-item-name a:hover {
+  text-decoration: underline;
+}
+
+.media-item-artist a:hover,
+.media-item-album a:hover {
+  text-decoration: underline;
+  color: white;
+}
