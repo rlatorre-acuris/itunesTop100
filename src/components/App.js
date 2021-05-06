@@ -1,4 +1,4 @@
-import { useState, useReducer } from "react";
+import { useEffect, useReducer } from "react";
 
 import "./App.css";
 import MediaItem from "./MediaItem";
@@ -6,58 +6,63 @@ import Menu from "./Menu";
 import Filter from "./Filter";
 import Spinner from "./Spinner";
 import Refresh from "./Refresh";
+import reducer from "../services/reducer";
+import getFeed from "../services/feeds";
+import { filterItems } from "../services/selectors";
 
 function App() {
-  const [filter, setFilter] = useState("");
-  const onFilterChange = ({ target: { value } = {} } = {}) => setFilter(value);
-  const onFilterReset = () => setFilter("");
-  const [state, dispatch] = useReducer((state, action) => state, {
+  const [state, dispatch] = useReducer(reducer, {
     activePage: "albums",
     filter: "",
     loading: true,
-    artists: {
-      lookup: {},
-    },
-    albums: {
-      lookup: {},
-      list: [],
-    },
-    songs: {
-      lookup: {},
-      list: [],
-    },
+    error: false,
+    albums: [],
+    songs: [],
   });
+  const { activePage, filter, loading, error } = state;
+  const isAlbum = activePage === "albums";
+  const items = filterItems(state);
+
+  const refresh = async () => {
+    dispatch({ type: "SET_LOADER" });
+    try {
+      const payload = await getFeed(activePage);
+      dispatch({ type: `LOAD_${activePage.toUpperCase()}`, payload });
+    } catch (err) {
+      dispatch({ type: "SET_ERROR", payload: true });
+    }
+  };
+  const setFilter = ({ target: { value } = {} } = {}) =>
+    dispatch({ type: "SET_FILTER", payload: value });
+  const resetFilter = () => dispatch({ type: "SET_FILTER", payload: "" });
+  const resetError = () => dispatch({ type: "SET_ERROR", payload: false });
+  const setPage = (id) => {
+    dispatch({ type: "SET_PAGE", payload: id });
+    refresh();
+  };
+  useEffect(() => {
+    refresh();
+  }, []);
   return (
     <div className="App">
       <header>
         <div className="titleRow">
           <h1>iTunes Top 100</h1>
-          <Refresh onClick={() => null} />
+          <Refresh onClick={refresh} />
         </div>
-        <Filter
-          text={filter}
-          onChange={onFilterChange}
-          onCancel={onFilterReset}
-        />
+        <Filter text={filter} onChange={setFilter} onCancel={resetFilter} />
         <hr className="separator" />
       </header>
       <div className="body">
         <div className="menubar">
-          <Menu activeId="albums" onSelect={() => null} />
+          <Menu activeId={activePage} onSelect={setPage} />
         </div>
         <div className="content">
-          <MediaItem
-            name="My Savior"
-            link="https://music.apple.com/us/album/my-savior/1551855429?uo=2"
-            image="https://is2-ssl.mzstatic.com/image/thumb/Music114/v4/c2/6b/78/c26b783d-6a56-b182-e367-d9035dda3c78/21UMGIM00560.rgb.jpg/170x170bb.png"
-            artist={{
-              name: "Carrie Underwood",
-              link:
-                "https://music.apple.com/us/artist/carrie-underwood/63399334?uo=2",
-            }}
-            isAlbum={true}
-          />
-          <Spinner />
+          {!loading &&
+            items.map((item, index) => (
+              <MediaItem key={index} {...item} isAlbum={isAlbum} />
+            ))}
+          {loading && <Spinner />}
         </div>
       </div>
     </div>
