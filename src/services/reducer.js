@@ -33,7 +33,6 @@ const reducer = (state, { type, payload }) => {
       };
     case "LOAD_SONGS":
       ({ feed: { entry: entries } = {} } = payload);
-      console.log("ENTRIES", entries);
       if (!entries || !Array.isArray(entries) || !entries.length)
         return {
           ...state,
@@ -45,7 +44,7 @@ const reducer = (state, { type, payload }) => {
         songs: entries.map(
           ({
             "im:name": { label: name } = {},
-            link: { attributes: { href: link } = {} } = {},
+            link: [{ attributes: { href: link } = {} } = {}] = [],
             "im:image": [img55, img60, { label: image } = {}] = [],
             "im:artist": {
               label: artistName,

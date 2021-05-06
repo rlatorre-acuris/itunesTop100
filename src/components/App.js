@@ -29,6 +29,7 @@ function App() {
       const payload = await getFeed(activePage);
       dispatch({ type: `LOAD_${activePage.toUpperCase()}`, payload });
     } catch (err) {
+      console.error(err);
       dispatch({ type: "SET_ERROR", payload: true });
     }
   };
@@ -38,11 +39,13 @@ function App() {
   const resetError = () => dispatch({ type: "SET_ERROR", payload: false });
   const setPage = (id) => {
     dispatch({ type: "SET_PAGE", payload: id });
-    refresh();
   };
   useEffect(() => {
     refresh();
   }, []);
+  useEffect(() => {
+    refresh();
+  }, [activePage]);
   return (
     <div className="App">
       <header>
