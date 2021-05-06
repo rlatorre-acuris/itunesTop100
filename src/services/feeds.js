@@ -6,10 +6,14 @@ const ENDPOINT = {
 const getFeed = async (type) => {
   try {
     const response = await fetch(ENDPOINT[type]);
-    if (!response.ok) throw new Error("server error");
+    if (!response.ok)
+      throw new Error(`HTTP error ${response.status}: ${response.statusText}`);
     const data = await response.json();
     return data;
   } catch (err) {
-    return { feed: { entry: [] } };
+    console.error("Error while trying to fetch from feed.", err.message);
+    throw err;
   }
 };
+
+export default getFeed;
